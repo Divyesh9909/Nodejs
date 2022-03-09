@@ -1,0 +1,21 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "My First Nodejs File",
+  "main": "main.js",
+  "scripts": {
+    "start": "nodemon main"
+  },
+  "author": "Divyesh Shah",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.1",
+    "cors": "^2.8.5",
+    "email-validator": "^2.0.4",
+    "express": "^4.17.2",
+    "mongoose": "^6.1.10",
+    "nodemon": "^2.0.15",
+    "stripe": "^8.207.0"
+  }
+}
