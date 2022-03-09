@@ -3,10 +3,12 @@ var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var validator = require("email-validator");
 var cors = require("cors");
+const Login = require("./server/Routes/LoginRoutes");
 const ProductRoutes = require("./server/Routes/ProductRoutes");
 const CartRoutes = require("./server/Routes/CartRoutes");
 const StripeRoutes = require("./server/Routes/StripeRoutes");
 const app = express();
+const morgan = require("morgan");
 
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -14,6 +16,7 @@ const saltRounds = 10;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("public"));
+app.use(morgan("dev"));
 app.use(
   bodyParser.urlencoded({
     extended: true,
@@ -38,16 +41,16 @@ app.get("/", (req, res) => {
 });
 app.post("/sign_up", (req, res) => {
   console.log("User Data", req.body);
-  var name = req.body.data.name;
-  var email = req.body.data.email;
-  var phno = req.body.data.phno;
-  var password = req.body.data.password;
+  var name = req.body.name;
+  var email = req.body.email;
+  var phno = req.body.phno;
+  var password = req.body.password;
 
   var data = {
-    name: name,
-    email: email,
-    phno: phno,
-    password: password,
+    name,
+    email,
+    phno,
+    password,
   };
 
   if (name && email && phno && password) {
@@ -104,6 +107,7 @@ app.post("/sign_up", (req, res) => {
     });
   }
 });
+app.use("/", Login);
 app.use("/", ProductRoutes);
 app.use("/", CartRoutes);
 app.use("/", StripeRoutes);

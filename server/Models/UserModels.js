@@ -1,4 +1,4 @@
-import { Schema as _Schema, model } from "mongoose";
+const { Schema, model } = require("mongoose");
 
 const Schema = _Schema;
 const schema = new Schema({
@@ -29,4 +29,4 @@ const schema = new Schema({
   ],
 });
 
-export default model("usermodel", schema); //accessing a model
+module.exports = model("usermodel", schema); //accessing a model

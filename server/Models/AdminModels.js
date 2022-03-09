@@ -1,4 +1,4 @@
-import { Schema as _Schema, model } from "mongoose";
+const { Schema, model } = require("mongoose");
 
 const Schema = _Schema;
 const schema = new Schema({
@@ -9,7 +9,8 @@ const schema = new Schema({
   email: {
     type: String,
     required: true,
-    match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
+    match:
+      /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
     unique: true,
   },
   password: {
@@ -18,4 +19,4 @@ const schema = new Schema({
   },
 });
 
-export default model("adminmodel", schema); //accessing a model
+module.exports = model("adminmodel", schema); //accessing a model

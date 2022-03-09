@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const { MONGODB_URI, MONGODB_PASSWORD } = process.env;
 
@@ -28,4 +28,4 @@ const db = () => {
 
 db();
 
-export default mongoose;
+module.exports = mongoose;

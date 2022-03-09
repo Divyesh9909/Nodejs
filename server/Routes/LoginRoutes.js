@@ -1,10 +1,11 @@
 const Router = require("express");
 const middlewarefunc = require("../Middleware/auth");
-const Index = require("../Controllers/IndexControllers");
+// const Login = require("../../login");
+// const login = require("../../login");
 
 const router = Router();
 
 //  ------------ All Routes -------------- |
-router.get("/", middlewarefunc, Index);
+router.get("/", middlewarefunc);
 
-module.exports = router;
+module.exports = Router;

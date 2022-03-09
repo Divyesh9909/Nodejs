@@ -1,10 +1,10 @@
 // @ts-nocheck
-import USERMODEL from "../Models/UserModels";
-import INVESTERMODEL from "../Models/InvestModels";
-import { SEND_EMAIL_FOR_FORGOT_PASSWORD } from "../Utils/generateEmail";
-import bcrypt from "bcrypt";
-import mongoose from "mongoose";
-import jwt from "jsonwebtoken";
+const USERMODEL = require("../Models/UserModels");
+const INVESTERMODEL = require("../Models/InvestModels");
+const SEND_EMAIL_FOR_FORGOT_PASSWORD = require("../Utils/generateEmail");
+const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 //====================>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<=================\\
 

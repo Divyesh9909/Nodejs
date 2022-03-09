@@ -1,5 +1,5 @@
-import Router from "express";
-import { AdminAuth } from "../Middleware/auth";
+const Router = require("express");
+// const { AdminAuth } from "../Middleware/auth";
 
 const router = Router();
 
@@ -30,4 +30,4 @@ router.get("/getallusers", AdminAuth, GetAllUsers);
 
 router.get("/getallinvesters", AdminAuth, GetAllInvesters);
 
-export default router;
+module.exports = router;
