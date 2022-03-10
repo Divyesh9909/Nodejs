@@ -110,12 +110,12 @@ app.post("/sign_up", (req, res) => {
     });
   }
 });
-app.use("/login", Login);
-app.use("/product", ProductRoutes);
-app.use("/cart", CartRoutes);
-app.use("/pay", StripeRoutes);
+app.post("/login", Login);
+app.post("/product", ProductRoutes);
+app.post("/cart", CartRoutes);
+app.post("/pay", StripeRoutes);
 
-app.get("*", function (req, res) {
+app.get("/dgfdfg*", function (req, res) {
   res.status(404).json({
     success: true,
     message: "route not found",
