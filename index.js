@@ -1,14 +1,17 @@
 var express = require("express");
-var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
-var validator = require("email-validator");
 var cors = require("cors");
+const morgan = require("morgan");
+
+var bodyParser = require("body-parser");
+var validator = require("email-validator");
+
 const Login = require("./server/Routes/LoginRoutes");
 const ProductRoutes = require("./server/Routes/ProductRoutes");
 const CartRoutes = require("./server/Routes/CartRoutes");
 const StripeRoutes = require("./server/Routes/StripeRoutes");
+
 const app = express();
-const morgan = require("morgan");
 
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -107,10 +110,18 @@ app.post("/sign_up", (req, res) => {
     });
   }
 });
-app.use("/", Login);
-app.use("/", ProductRoutes);
-app.use("/", CartRoutes);
-app.use("/", StripeRoutes);
+app.use("/login", Login);
+app.use("/product", ProductRoutes);
+app.use("/cart", CartRoutes);
+app.use("/pay", StripeRoutes);
+
+app.get("*", function (req, res) {
+  res.status(404).json({
+    success: true,
+    message: "route not found",
+  });
+});
+
 app.listen(4000);
 
 console.log("Server is Responding on Port 4000");
