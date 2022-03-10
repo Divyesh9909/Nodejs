@@ -1,16 +1,12 @@
 const mongoose = require("mongoose");
 
-const { MONGODB_URI, MONGODB_PASSWORD } = process.env;
-
 const db = () => {
   try {
     mongoose.connect(
-      MONGODB_URI.replace("<password>", MONGODB_PASSWORD),
+      "mongodb://Localhost:27017/mydb",
       {
         useNewUrlParser: true,
-        useCreateIndex: true,
         useUnifiedTopology: true,
-        useFindAndModify: false,
       },
       (err) => {
         if (!err) {

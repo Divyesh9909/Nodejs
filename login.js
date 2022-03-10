@@ -1,11 +1,9 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
-var validator = require("email-validator");
 var cors = require("cors");
 const app = express();
 
-const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 app.use(cors());
@@ -29,7 +27,7 @@ db.once("open", () => console.log("Connected to Database"));
 
 module.exports = (Login) => {
   app.post("/log_in", (req, res) => {
-    console.log("User Data", req.body);
+    // console.log("User Data", req.body);
     var email = req.body.email;
     var password = req.body.password;
 
@@ -40,10 +38,7 @@ module.exports = (Login) => {
     if (email && password) {
       if (validator.validate(email)) {
         if (password.length >= 6) {
-          var passwordIsValid = bcrypt.compareSync(
-            req.body.password,
-            data.password
-          );
+          var passwordIsValid = bcrypt.compareSync(req.body.password, data.password);
 
           if (!passwordIsValid) {
             return res.status(401).send({ message: "user not " });
