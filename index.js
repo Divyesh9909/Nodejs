@@ -48,7 +48,7 @@ app.use("/", UserRoute);
 
 // because user must be logged in so we are checking for a authorization token {so passed a function as a middleware }
 app.post("/product", middlewarefunc, ProductRoutes);
-app.post("/cart", middlewarefunc, CartRoutes);
+app.use("/", middlewarefunc, CartRoutes);
 app.post("/pay", middlewarefunc, StripeRoutes);
 
 app.use("*", NotFound);

@@ -2,6 +2,8 @@ const Cart = require("../Models/Cart");
 const router = require("express").Router();
 const UserCart = require("../Controllers/CartController");
 
+console.log("show");
+
 router.get("/cart", async (req, res) => {
   Cart.find()
     .then((Cart) => {
@@ -9,18 +11,23 @@ router.get("/cart", async (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving Cart Product.",
+        message:
+          err.message || "Some error occurred while retrieving Cart Product.",
       });
     });
 });
 
-router.post("/cart", async (req, res) => {
+router.post("/cart/:UId", async (req, res) => {
   const { productId, quantity, name, price } = req.body;
 
-  const userId = "5de7ffa74fff640a0491bc4f"; //TODO: the logged in user id
+  // const userId = "5de7ffa74fff640a0491bc4f"; //TODO: the logged in user id
+
+  const Id = req.params.id;
+  const UserId = Id;
+  console.log(UserId, "userid Is Printed");
 
   try {
-    let cart = await Cart.findOne({ userId });
+    let cart = await Cart.findOne({ UserId });
 
     if (cart) {
       //cart exists for user
