@@ -6,6 +6,7 @@ const Cart = require("../Models/Cart");
 // } = require("");
 
 const router = require("express").Router();
+const UserCart = require("../Controllers/CartController");
 
 // get
 
@@ -107,14 +108,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //GET USER CART
-router.get("/find/:userId", async (req, res) => {
-  try {
-    const cart = await Cart.findOne({ userId: req.params.userId });
-    res.status(200).json(cart);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.get("/find/:userId", UserCart);
 
 // //GET ALL
 
