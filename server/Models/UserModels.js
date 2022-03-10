@@ -1,6 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-const Schema = _Schema;
 const schema = new Schema({
   // sign in database
   username: { type: String, required: true },

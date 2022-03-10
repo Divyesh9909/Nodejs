@@ -1,98 +1,103 @@
 // @ts-nocheck
-const USERMODEL = require("../Models/UserModels");
-const INVESTERMODEL = require("../Models/InvestModels");
-const SEND_EMAIL_FOR_FORGOT_PASSWORD = require("../Utils/generateEmail");
 const bcrypt = require("bcrypt");
-const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+var validator = require("email-validator");
+const UserModel = require("../Models/UserModels");
 
 //====================>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<=================\\
 
-export const Register = (req, res, next) => {
-  const { username, email, password, confirmPassword } = req.body;
+const Register = (req, res, next) => {
+  const saltRounds = 10;
 
-  if (!username && !email && !password && !confirmPassword) {
-    res.json({
-      error: "PLease provide all input fields...",
-    });
-  } else if (!username.length >= 6) {
-    res.json({
-      error: "username must have min 6 charactor...!",
-    });
-  } else if (password !== confirmPassword) {
-    res.json({
-      error: "Password Not Matched!",
-    });
-  } else {
-    bcrypt.hash(password, 10, function (err, hash) {
-      if (err) {
-        return res.json({
-          error: "Something Wrong, Try Later!",
-          error: err,
-        });
-      } else {
-        // console.log(hash);
-        const userDetails = new USERMODEL({
-          _id: mongoose.Types.ObjectId(),
-          username: username,
-          email: email,
-          password: hash,
-        });
-        try {
-          USERMODEL.findOne({ email: email })
-            .exec()
-            .then((user) => {
-              // console.log(user);
+  // console.log("User Data", req.body);
+  var name = req.body.name;
+  var email = req.body.email;
+  var phno = req.body.phno;
+  var password = req.body.password;
 
-              if (user) {
-                res.json({
-                  error: "already have a account",
-                  userid: user._id,
-                });
-              } else {
-                userDetails
-                  .save()
-                  .then((doc) => {
-                    res.status(201).json({
-                      success: "User Registered Successfully",
-                      results: doc,
-                    });
-                  })
-                  .catch((err) => {
-                    res.status(500).json({
-                      error: err,
-                      errormsg:
-                        "cant register right now, please try again later",
-                    });
+  var UserData = new UserModel({
+    username: name,
+    email,
+    phno,
+    password,
+  });
+
+  if (name && email && phno && password) {
+    if (name.length >= 3) {
+      if (validator.validate(email)) {
+        if (phno.length === 10) {
+          if (password.length >= 6) {
+            let hash = bcrypt.hashSync(password, saltRounds);
+            UserData.password = hash;
+
+            UserData.save()
+              .then((collection) => {
+                if (collection) {
+                  return res.status(200).json({
+                    success: true,
+                    message: "registered successfully ",
+                    data: collection,
                   });
-              }
-            })
-            .catch((err) => {
-              res.status(500).json({
-                error: err.message,
-                errormsg: "server error,,  please check your connection",
+                }
+              })
+              .catch((err) => {
+                const someError = { ...err };
+                // console.log(
+                //   "catch, line 41, signUpRoutes.js ",
+                //   someError
+                // );
+
+                if (someError.keyPattern.email > 0) {
+                  return res.status(200).json({
+                    success: false,
+                    message: `Email '${someError.keyValue.email}' already exist , you just need to log in  `,
+                    server_err: err.message,
+                  });
+                }
               });
+          } else {
+            return res.status(400).json({
+              sucess: false,
+              message: "Password should be Minimum 6 Digit",
             });
-        } catch (error) {
-          res.status(500).json({
-            error: error.message,
-            errormsg: "server error,,  please check your connection",
+          }
+        } else {
+          return res.status(400).json({
+            sucess: false,
+            message: "Phno should be 10 Digit",
           });
         }
+      } else {
+        return res.status(400).json({
+          sucess: false,
+          message: "Email should be valid ",
+        });
       }
+    } else {
+      return res.status(400).json({
+        sucess: false,
+        message: "Name should be grether than 3 Char",
+      });
+    }
+  } else {
+    return res.status(400).json({
+      sucess: false,
+      message: "All Data is Compulsory",
     });
   }
 };
 
-export const Login = (req, res) => {
-  const { email, password } = req.body;
+const Login = (req, res, next) => {
+  //   console.log("User Data", req.body);
+  var email = req.body.email;
+  var password = req.body.password;
 
   if (!email && !password) {
     res.json({
-      error: "PLease provide all input fields...",
+      error: "Invaild Credientials",
     });
   } else {
-    USERMODEL.findOne({ email: email })
+    UserModel.findOne({ email: email })
       .exec()
       .then((user) => {
         if (!user) {
@@ -109,14 +114,14 @@ export const Login = (req, res) => {
               const token = jwt.sign(
                 {
                   username: user.username,
+                  email: user.email,
                   userid: user._id,
                 },
-                "userToPagalhaibhai",
+                "userMeraDost",
                 {
                   expiresIn: "1h",
                 }
               );
-
               return res.status(201).json({
                 success: "SuccessFully LOGGED in For 1 HOUR  , congratulations",
                 token: token,
@@ -137,179 +142,6 @@ export const Login = (req, res) => {
   }
 };
 
-export const ForgotPassword = (req, res) => {
-  const { email } = req.body;
+module.exports = { Login, Register };
 
-  if (!email) {
-    return res.json({
-      error: "PLease provide email from input fields...",
-    });
-  } else {
-    USERMODEL.findOne({ email: email })
-      .exec()
-      .then((user) => {
-        if (!user) {
-          return res.json({
-            error: "Either you are not OUR User OR try again with valid email",
-          });
-        } else {
-          //   console.log("else block run");
-          const generateOTP = () => {
-            // console.log("generateOTP func run");
-            const digits = "0123456789";
-            let OTP = "";
-
-            for (let i = 0; i < 6; i++) {
-              OTP += digits[Math.floor(Math.random() * 10)];
-            }
-            return OTP;
-          };
-
-          const OTP = generateOTP();
-          user.otp = OTP;
-          user
-            .save()
-            .then(() => {
-              const { email, username } = user;
-              //   console.log("email : ", email, "username : ", username);
-              SEND_EMAIL_FOR_FORGOT_PASSWORD(email, "success", username, OTP);
-
-              const helper = () => {
-                user.otp = "";
-                user.save();
-              };
-              setTimeout(function () {
-                helper();
-              }, 180000);
-
-              return res.json({
-                success: `check your ${email} email for OTP, You have 3 min. of time only , so hurry up`,
-              });
-            })
-            .catch((err) => {
-              return res.json({
-                error: "error while saving And" + err.message,
-              });
-            });
-        }
-      })
-      .catch((err) => {
-        return res.json({
-          error: err.message,
-        });
-      });
-  }
-};
-
-export const VarifyOTP = (req, res) => {
-  try {
-    const { otp, email } = req.body;
-
-    if (!otp || !email) {
-      res.json({
-        error: "PLease provide all input fields...",
-      });
-    } else {
-      USERMODEL.findOne({ email: email })
-        .exec()
-        .then((user) => {
-          // console.log(user);
-          if (!user) {
-            res.json({
-              error: "Auth Failed",
-            });
-          } else {
-            if (user.otp === "") {
-              return res.json({
-                error: "OTP has expired",
-              });
-            }
-            if (user.otp === otp) {
-              return res.status(200).json({ OTPVARIFYsuccess: "OTP Varified" });
-            } else {
-              // console.log(user.otp);
-              // console.log(otp);
-              return res.json({
-                error: "Invalid OTP, check your email again",
-              });
-            }
-          }
-        });
-    }
-  } catch (err) {
-    // console.log("Error in submitting otp", err.message);
-    return res.status(400).json({ error: `Error in postOTP${err.message}` });
-  }
-};
-
-export const ChangePassword = (req, res, next) => {
-  try {
-    const { email, NewPassword, confirmNewPassword } = req.body;
-
-    if (!NewPassword || !confirmNewPassword || !email) {
-      return res.json({
-        error: "Please provide all the required details",
-      });
-    }
-    if (NewPassword !== confirmNewPassword) {
-      return res.json({
-        error: "Password Not Matched!",
-      });
-    } else {
-      let hashedPassword;
-
-      bcrypt.hash(NewPassword, 10, function (err, hash) {
-        if (err) {
-          return res.json({
-            error: "Something Wrong, Try Later!",
-            error: err,
-          });
-        } else {
-          // console.log(hash);
-          hashedPassword = hash;
-          USERMODEL.findOne({ email: email })
-            .exec()
-            .then((user) => {
-              // console.log(user);
-              user.password = hashedPassword;
-              user.save();
-
-              return res.status(200).json({ success: "Password Changed" });
-            });
-        }
-      });
-    }
-  } catch (err) {
-    // console.log("Error in submitting otp", err.message);
-    return res.json({ error: `Error in postOTP${err.message}` });
-  }
-};
-
-export const GetAllUsers = async (req, res) => {
-  try {
-    const allUsers = await USERMODEL.find({});
-    if (allUsers.length > 0) {
-      return res.status(200).json({ message: allUsers });
-    } else {
-      return res.json({ error: "No Users Yet ..." });
-    }
-  } catch (err) {
-    console.log("Error in gettingAllUsers", err.message);
-    return res.json({ message: `Error in gettingAllUsers ${err.message}` });
-  }
-};
-
-export const GetAllInvesters = async (req, res) => {
-  try {
-    const allInvesters = await INVESTERMODEL.find({});
-    if (allInvesters.length > 0) {
-      return res.status(200).json({ message: allInvesters });
-    } else {
-      return res.json({ error: "No Users Yet ..." });
-    }
-  } catch (err) {
-    console.log("Error in gettingallInvesters", err.message);
-    return res.json({ message: `Error in gettingallInvesters ${err.message}` });
-  }
-};
 //====================>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<=================\\

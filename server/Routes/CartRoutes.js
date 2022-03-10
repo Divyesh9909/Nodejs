@@ -1,13 +1,5 @@
 const Cart = require("../Models/Cart");
-// const {
-//   verifyToken,
-//   verifyTokenAndAuthorization,
-//   verifyTokenAndAdmin,
-// } = require("");
-
 const router = require("express").Router();
-
-// get
 
 router.get("/cart", async (req, res) => {
   Cart.find()
@@ -16,31 +8,10 @@ router.get("/cart", async (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving Cart Product.",
+        message: err.message || "Some error occurred while retrieving Cart Product.",
       });
     });
-  //   const newCart = new Cart(req.body);
-  // res.json({
-  //   status: 200,
-  //   message: "your cart",
-  // });
 });
-
-//CREATE
-
-// router.post("/Cart", async (req, res) => {
-//   const newCart = new Cart(req.body);
-
-//   try {
-//     const savedCart = await newCart.save();
-//     res.status(200).json(savedCart);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
-
-// create
 
 router.post("/cart", async (req, res) => {
   const { productId, quantity, name, price } = req.body;
