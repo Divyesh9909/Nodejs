@@ -15,8 +15,8 @@ const middlewarefunc = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, "userMeraDost");
 
-    // console.log("decoded ", decoded);
-    req.username = decoded.username; //decoded.user because we have set user in payload
+    // console.log("decodedline 18 ", decoded);
+    // req.username = decoded.username; //decoded.user because we have set user in payload
     next();
   } catch (err) {
     res.status(401).json({ msg: "Token is not valid" });

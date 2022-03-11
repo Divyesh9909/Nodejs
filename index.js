@@ -10,8 +10,8 @@ const middlewarefunc = require("./server/Middleware/auth");
 const HomeRoute = require("./server/Routes/HomeRoutes");
 const ProductRoutes = require("./server/Routes/ProductRoutes");
 const CartRoutes = require("./server/Routes/CartRoutes");
-const StripeRoutes = require("./server/Routes/StripeRoutes");
-
+// const RazorPayRoutes = require("./server/Routes/RazorPayRoutes");
+const RazorPay = require("./server/Routes/RazorPayRoutes");
 const UserRoute = require("./server/Routes/UserRoutes");
 
 const NotFound = require("./server/Routes/NotFound");
@@ -49,8 +49,7 @@ app.use("/", UserRoute);
 // because user must be logged in so we are checking for a authorization token {so passed a function as a middleware }
 app.post("/product", middlewarefunc, ProductRoutes);
 app.use("/", middlewarefunc, CartRoutes);
-app.post("/pay", middlewarefunc, StripeRoutes);
-
+app.use("/", RazorPay);
 app.use("*", NotFound);
 
 app.listen(4000);
