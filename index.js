@@ -13,6 +13,7 @@ const CartRoutes = require("./server/Routes/CartRoutes");
 // const RazorPayRoutes = require("./server/Routes/RazorPayRoutes");
 const RazorPay = require("./server/Routes/RazorPayRoutes");
 const UserRoute = require("./server/Routes/UserRoutes");
+const PaymentRoutes = require("./server/Routes/PaymentRoutes");
 
 const NotFound = require("./server/Routes/NotFound");
 
@@ -50,6 +51,7 @@ app.use("/", UserRoute);
 app.post("/product", middlewarefunc, ProductRoutes);
 app.use("/", middlewarefunc, CartRoutes);
 app.use("/", RazorPay);
+app.use("/", PaymentRoutes);
 app.use("*", NotFound);
 
 app.listen(4000);
