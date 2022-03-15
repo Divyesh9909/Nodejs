@@ -20,14 +20,12 @@ router.get("/cart", async (req, res) => {
 router.post("/cart/:UId", async (req, res) => {
   const { productId, quantity, name, price } = req.body;
 
-  // const userId = "5de7ffa74fff640a0491bc4f"; //TODO: the logged in user id
-
   const Id = req.params.id;
-  const UserId = Id;
-  console.log(UserId, "userid Is Printed");
+  const user = Id;
+  console.log(user, "userid Is Printed");
 
   try {
-    let cart = await Cart.findOne({ UserId });
+    let cart = await Cart.findOne({ user });
 
     if (cart) {
       //cart exists for user
@@ -40,14 +38,14 @@ router.post("/cart/:UId", async (req, res) => {
         cart.products[itemIndex] = productItem;
       } else {
         //product does not exists in cart, add new item
-        cart.products.push({ productId, quantity, name, price });
+        cart.products.push({ productId, quantity, name, price, user });
       }
       cart = await cart.save();
       return res.status(201).send(cart);
     } else {
       //no cart for user, create new cart
       const newCart = await Cart.create({
-        userId,
+        user,
         products: [{ productId, quantity, name, price }],
       });
 
@@ -76,10 +74,15 @@ router.put("/:id", async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", async (req, res) => {
+router.delete("/cart/:id", async (req, res) => {
   try {
-    await Cart.findByIdAndDelete(req.params.id);
-    res.status(200).json("Cart has been deleted...");
+    const deleteCartItems = await Cart.findByIdAndDelete(req.params.id);
+    if (req.params.id) {
+      console.log("Check Deleted Cart", deleteCartItems);
+      res.status(200).json("Cart has been deleted...");
+    } else {
+      res.status(500).json(err, "Try again ");
+    }
   } catch (err) {
     res.status(500).json(err);
   }

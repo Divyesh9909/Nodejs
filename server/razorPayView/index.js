@@ -1,4 +1,4 @@
-fetch("http://localhost:4000/pay")
+fetch("http://localhost:4000/pay/:id")
   .then((paymentCreated) => {
     return paymentCreated.json();
   })

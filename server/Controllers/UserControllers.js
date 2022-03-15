@@ -119,11 +119,12 @@ const Login = (req, res, next) => {
                 },
                 "userMeraDost",
                 {
-                  expiresIn: "1h",
+                  expiresIn: "24h",
                 }
               );
               return res.status(201).json({
-                success: "SuccessFully LOGGED in For 1 HOUR  , congratulations",
+                success:
+                  "SuccessFully LOGGED in For 24 HOUR  , congratulations",
                 token: token,
               });
             } else {

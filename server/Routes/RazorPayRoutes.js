@@ -3,6 +3,6 @@ const router = Router();
 
 const { RazorPayFunc } = require("../Controllers/RazorPayController");
 
-router.get("/pay", RazorPayFunc);
+router.get("/pay/:id", RazorPayFunc);
 
 module.exports = router;

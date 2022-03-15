@@ -9,6 +9,8 @@ const PaymentSchema = mongoose.model(
     productId: { type: String, required: true },
 
     cartId: { type: String, required: true },
+
+    paymentId: { type: String, required: true },
   })
 );
 

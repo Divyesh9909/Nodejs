@@ -6,32 +6,31 @@ const razorpay = new Razorpay({
   key_secret: "gxN4MDD915OkQA2i5eYWfk6K",
 });
 
-const RazorPayFunc = (req, res) => {
-  const someVar = req.params.CartId;
+const RazorPayFunc = async (req, res) => {
+  const id = req.param.id;
+  const userId = id;
+  const options = {
+    amount: 10 * 10,
+    currency: "INR",
+    receipt: "this is a new payment by Divyesh", //any unique id
+  };
 
-  if (someVar) {
-    Cart.find({ _id: someVar }).then(async (data, err) => {
-      if (data) {
-        const options = {
-          amount: 10 * 10,
-          currency: "INR",
-          receipt: "this is a new payment by Divyesh", //any unique id
-        };
-
-        try {
-          const response = await Razorpay.orders.create(options);
-          res.json({
-            order_id: response.id,
-            currency: response.currency,
-            amount: response.amount,
-          });
-        } catch (error) {
-          res.status(400).json({
-            message: error.error.description,
-            success: false,
-          });
-        }
-      }
+  try {
+    const response = await razorpay.orders.create(options);
+    if (response) {
+      res.json({
+        userId,
+        order_id: response.id,
+        currency: response.currency,
+        amount: response.amount,
+        productId: req.body.productId,
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      // message: error.error.description,
+      success: false,
+      message: error.message,
     });
   }
 };
