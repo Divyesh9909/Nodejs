@@ -5,12 +5,12 @@ require("./server/Dbconnectors/database");
 
 var bodyParser = require("body-parser");
 
-const middlewarefunc = require("./server/Middleware/auth");
+// const middlewarefunc = require("./server/Middleware/auth");
 
 const HomeRoute = require("./server/Routes/HomeRoutes");
 const ProductRoutes = require("./server/Routes/ProductRoutes");
 const CartRoutes = require("./server/Routes/CartRoutes");
-// const RazorPayRoutes = require("./server/Routes/RazorPayRoutes");
+const RazorPayRoutes = require("./server/Routes/RazorPayRoutes");
 const RazorPay = require("./server/Routes/RazorPayRoutes");
 const UserRoute = require("./server/Routes/UserRoutes");
 const PaymentRoutes = require("./server/Routes/PaymentRoutes");
@@ -48,8 +48,8 @@ app.get("/", HomeRoute);
 app.use("/", UserRoute);
 
 // because user must be logged in so we are checking for a authorization token {so passed a function as a middleware }
-app.post("/product", middlewarefunc, ProductRoutes);
-app.use("/", middlewarefunc, CartRoutes);
+app.get("/product", ProductRoutes);
+app.use("/", CartRoutes);
 app.use("/", RazorPay);
 app.use("/", PaymentRoutes);
 app.use("*", NotFound);
