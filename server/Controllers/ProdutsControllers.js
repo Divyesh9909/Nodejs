@@ -10,4 +10,17 @@ const findAll = (req, res) => {
       });
     });
 };
-module.exports = findAll;
+
+const findById = (req, res) => {
+  Product.findById({ _id: req.params.productId })
+    .then((productId) => {
+      res.send(productId);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving Product.",
+      });
+    });
+};
+
+module.exports = { findAll, findById };

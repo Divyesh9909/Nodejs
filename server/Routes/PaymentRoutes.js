@@ -3,6 +3,6 @@ const router = Router();
 
 const PaymentRoutesFunc = require("../Controllers/PaymentController");
 
-router.get("/Payment/:id", PaymentRoutesFunc);
+router.post("/Payment/:id", PaymentRoutesFunc);
 
 module.exports = router;
