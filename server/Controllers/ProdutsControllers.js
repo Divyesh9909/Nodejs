@@ -12,7 +12,8 @@ const findAll = (req, res) => {
 };
 
 const findById = (req, res) => {
-  Product.findById({ _id: req.params.productId })
+  console.log("req.params.id ", req.params);
+  Product.find({ id: Number(req.params.productId) })
     .then((productId) => {
       res.send(productId);
     })

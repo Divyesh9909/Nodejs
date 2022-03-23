@@ -48,7 +48,7 @@ app.get("/", HomeRoute);
 app.use("/", UserRoute);
 
 // because user must be logged in so we are checking for a authorization token {so passed a function as a middleware }
-app.get("/product", ProductRoutes);
+app.use("/", ProductRoutes);
 app.use("/", CartRoutes);
 app.use("/", RazorPay);
 app.use("/", PaymentRoutes);
