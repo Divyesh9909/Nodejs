@@ -9,11 +9,11 @@ const UserModel = require("../Models/UserModels");
 const Register = (req, res, next) => {
   const saltRounds = 10;
 
-  // console.log("User Data", req.body);
-  var name = req.body.name;
-  var email = req.body.email;
-  var phno = req.body.phno;
-  var password = req.body.password;
+  console.log("User Data", req.body);
+  var name = req.body.data.name;
+  var email = req.body.data.email;
+  var phno = req.body.data.phno;
+  var password = req.body.data.password;
 
   var UserData = new UserModel({
     username: name,
@@ -89,8 +89,8 @@ const Register = (req, res, next) => {
 
 const Login = (req, res, next) => {
   //   console.log("User Data", req.body);
-  var email = req.body.email;
-  var password = req.body.password;
+  var email = req.body.data.email;
+  var password = req.body.data.password;
 
   if (!email && !password) {
     res.json({
