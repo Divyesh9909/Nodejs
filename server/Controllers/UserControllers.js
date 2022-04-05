@@ -76,7 +76,7 @@ const Register = (req, res, next) => {
     } else {
       return res.status(400).json({
         sucess: false,
-        message: "Name should be grether than 3 Char",
+        message: "Name should be greater than 3 Char",
       });
     }
   } else {
@@ -88,7 +88,7 @@ const Register = (req, res, next) => {
 };
 
 const Login = (req, res, next) => {
-  //   console.log("User Data", req.body);
+  console.log("User Data", req.body);
   var email = req.body.data.email;
   var password = req.body.data.password;
 
